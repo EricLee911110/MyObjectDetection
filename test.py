@@ -6,6 +6,10 @@ import torch
 import os
 import cv2
 
+INPUT_PATH = 'frames_in_video/'
+MIN_CONFIDENCE = 0.7
+MODEL_TYPE = "frcnn-mobilenet"
+
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASSES = pickle.loads(open('coco_classes.pickle', "rb").read())
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
@@ -16,12 +20,12 @@ MODELS = {
 	"retinanet": detection.retinanet_resnet50_fpn
 }
 
-model = MODELS["frcnn-resnet"](pretrained=True, progress=True, num_classes=len(CLASSES), pretrained_backbone=True).to(DEVICE)
+model = MODELS[MODEL_TYPE](pretrained=True, progress=True, num_classes=len(CLASSES), pretrained_backbone=True).to(DEVICE)
 model.eval()
 
 
-for x in os.listdir('input_images'):
-    path_input_image = "input_images/" + x
+for x in os.listdir(INPUT_PATH):
+    path_input_image = INPUT_PATH + x
     output_image_name = x.split('.')[0] + "_fin." + x.split('.')[1]
     path_output_image = "output_images/" + output_image_name
     
@@ -46,7 +50,7 @@ for x in os.listdir('input_images'):
         confidence = detections["scores"][i]
         # filter out weak detections by ensuring the confidence is
         # greater than the minimum confidence
-        if confidence > 0.7:
+        if confidence > MIN_CONFIDENCE:
             # extract the index of the class label from the detections,
             # then compute the (x, y)-coordinates of the bounding box
             # for the object
