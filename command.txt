@@ -1,3 +1,4 @@
+MAIN:
 extract every frame in video
 - ffmpeg -i raw_videos/input.mp4 frames_in_video/image%d.png
 
@@ -6,3 +7,16 @@ run the model
 
 combine every frame into a video
 - ffmpeg -i output_images/image%d_fin.png -pix_fmt yuv420p fin_video/output.mp4
+
+
+SIDEWORK:
+1. label_experiment:
+what is inside the detection container?
+- don't know
+2. find the position of the box:
+ 
+
+
+
+
+
